@@ -5,6 +5,48 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BRTNeura AI Audit | Discover AI Opportunities for Your Business</title>
     
+    <!-- Netlify HUD / Badge Neutralizer -->
+    <script>
+      (function() {
+        try {
+          localStorage.setItem("nl-hud:public:v1", "hidden");
+          localStorage.setItem("nl-hud:owner-private:v1", "hidden");
+        } catch (e) {}
+
+        var purge = function() {
+          var frames = document.querySelectorAll('#nl-badge-frame, #nl-hud-frame, iframe[title="Powered by Netlify"], iframe[title="Netlify"]');
+          for (var i = 0; i < frames.length; i++) frames[i].remove();
+          var scripts = document.querySelectorAll('script[data-nf-variant], script[src*="netlify/scripts/hud"]');
+          for (var j = 0; j < scripts.length; j++) scripts[j].remove();
+        };
+
+        if (typeof MutationObserver !== 'undefined') {
+          var obs = new MutationObserver(function(muts) {
+            for (var i = 0; i < muts.length; i++) {
+              var nodes = muts[i].addedNodes;
+              for (var j = 0; j < nodes.length; j++) {
+                var n = nodes[j];
+                if (n.nodeType === 1) {
+                  if (
+                    n.id === 'nl-badge-frame' ||
+                    n.id === 'nl-hud-frame' ||
+                    (n.tagName === 'IFRAME' && (n.title === 'Powered by Netlify' || n.title === 'Netlify')) ||
+                    (n.tagName === 'SCRIPT' && (n.hasAttribute('data-nf-variant') || (n.src && n.src.indexOf('/.netlify/scripts/hud') !== -1)))
+                  ) {
+                    n.remove();
+                  }
+                }
+              }
+            }
+          });
+          obs.observe(document.documentElement, { childList: true, subtree: true });
+        }
+
+        window.addEventListener('DOMContentLoaded', purge);
+        window.addEventListener('load', purge);
+      })();
+    </script>
+    
     <!-- SEO & Application Metadata -->
     <meta name="description" content="Book a free 15-minute AI Audit discovery call with BRTNeura. Discover workflow automation and AI adoption opportunities to enhance efficiency and drive business growth." />
     <meta name="application-name" content="BRTNeura AI Audit" />
