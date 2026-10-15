@@ -1,0 +1,10 @@
+{
+  "description": "This landing page helps business leaders book a free AI Audit discovery call, showcasing AI opportunities to enhance efficiency and drive growth.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

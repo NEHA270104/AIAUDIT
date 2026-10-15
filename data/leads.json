@@ -1,0 +1,79 @@
+[
+  {
+    "id": "lead_1792052284697_1qwk92",
+    "fullName": "Actual Test 2026",
+    "businessEmail": "actualtest@example.com",
+    "phoneNumber": "+91 9999999999",
+    "companyName": "Dynamic Test Company",
+    "industry": "Education",
+    "companySize": "51–200",
+    "biggestChallenge": "Testing actual dynamic email data mapping.",
+    "submittedAt": "2026-10-15T08:18:04.697Z"
+  },
+  {
+    "id": "lead_1792052286651_hf50gd",
+    "fullName": "Elena Vance",
+    "businessEmail": "elena.vance@brtneura.in",
+    "phoneNumber": "+91 9822012345",
+    "companyName": "Apex Manufacturing Ltd",
+    "industry": "Manufacturing",
+    "companySize": "201–500",
+    "biggestChallenge": "Production bottlenecks and manual inventory tracking delay weekly reports.",
+    "submittedAt": "2026-10-15T08:18:06.651Z"
+  },
+  {
+    "id": "lead_1792052616222_64sgdk",
+    "fullName": "Rahul Sharma",
+    "businessEmail": "rahul.sharma@innovatetech.in",
+    "phoneNumber": "+91 9820011223",
+    "companyName": "InnovateTech Solutions",
+    "industry": "Healthcare",
+    "companySize": "51–200",
+    "biggestChallenge": "Automating patient report processing and follow-up communication workflows.",
+    "submittedAt": "2026-10-15T08:23:36.222Z"
+  },
+  {
+    "id": "lead_1792052654647_sh883b",
+    "fullName": "Priya Deshmukh",
+    "businessEmail": "priya.d@apexretail.in",
+    "phoneNumber": "+91 9765432100",
+    "companyName": "Apex Retail Brands",
+    "industry": "Retail & Services",
+    "companySize": "201–500",
+    "biggestChallenge": "High cart abandonment and lack of automated customer re-engagement pipelines.",
+    "submittedAt": "2026-10-15T08:24:14.647Z"
+  },
+  {
+    "id": "lead_1792052923594_m01yyt",
+    "fullName": "Neha Chavan",
+    "businessEmail": "neha.chavan2701@gmail.com",
+    "phoneNumber": "+917058167104",
+    "companyName": "BrtNeura",
+    "industry": "Healthcare",
+    "companySize": "11–50",
+    "biggestChallenge": "i want to know more details about ai audit",
+    "submittedAt": "2026-10-15T08:28:43.594Z"
+  },
+  {
+    "id": "lead_1792053490297_he8qff",
+    "fullName": "Ananya Roy",
+    "businessEmail": "ananya.roy@futurecorp.in",
+    "phoneNumber": "+91 9833012345",
+    "companyName": "FutureCorp AI Labs",
+    "industry": "Education",
+    "companySize": "11–50",
+    "biggestChallenge": "Testing production server dual email notification and success modal pipeline.",
+    "submittedAt": "2026-10-15T08:38:10.297Z"
+  },
+  {
+    "id": "lead_1792053520179_fn67cx",
+    "fullName": "Dev Test User",
+    "businessEmail": "dev.test@example.com",
+    "phoneNumber": "+91 9811002233",
+    "companyName": "Dev Test Technologies",
+    "industry": "Healthcare",
+    "companySize": "51–200",
+    "biggestChallenge": "Verifying that local dev server on port 8443 triggers the new workflow.",
+    "submittedAt": "2026-10-15T08:38:40.179Z"
+  }
+]
