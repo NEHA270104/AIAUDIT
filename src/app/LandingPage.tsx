@@ -670,7 +670,17 @@ function LandingPage() {
           <div className="footer-links"><span>Contact</span><a href="mailto:connect@brtneura.com">connect@brtneura.com</a><a href="tel:+918879114702">+91 88791 14702</a><a href="tel:+919403828927">+91 94038 28927</a><a href="https://brtneura.com" target="_blank" rel="noreferrer">brtneura.com</a></div>
           <div className="footer-cta"><span>Ready to move forward?</span><h3>Make your next AI decision the right one.</h3><Button href="#booking">Book free audit <Icon name="arrow" size={16} /></Button></div>
         </div>
-        <div className="container footer-bottom"><span>© 2025 BRTNeura. All rights reserved.</span><div><a href="https://brtneura.com/privacy-policy" target="_blank" rel="noreferrer">Privacy</a><a href="https://brtneura.com/terms-and-conditions" target="_blank" rel="noreferrer">Terms</a><a className="social" href="https://www.linkedin.com/company/brtneura/" target="_blank" rel="noreferrer" aria-label="BRTNeura on LinkedIn"><Icon name="linkedin" size={16} /></a></div></div>
+        <div className="container footer-bottom">
+          <div className="footer-legal">
+            <a href="https://brtneura.com/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy</a>
+            <a href="https://brtneura.com/terms-and-conditions" target="_blank" rel="noopener noreferrer">Terms</a>
+            <a className="social" href="https://www.linkedin.com/company/brtneura/" target="_blank" rel="noopener noreferrer" aria-label="BRTNeura on LinkedIn"><Icon name="linkedin" size={16} /></a>
+          </div>
+          <div className="footer-credit">
+            <span className="footer-credit-text">Powered by</span>
+            <a href="https://brtneura.com/" target="_blank" rel="noopener noreferrer" className="footer-credit-brand">BRTNeura</a>
+          </div>
+        </div>
       </footer>
     </div>
   );

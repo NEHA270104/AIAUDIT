@@ -1,7 +1,14 @@
 {
-  "description": "This landing page helps business leaders book a free AI Audit discovery call, showcasing AI opportunities to enhance efficiency and drive growth.",
+  "title": "BRTNeura AI Audit | Discover AI Opportunities for Your Business",
+  "description": "Book a free 15-minute AI Audit discovery call with BRTNeura. Discover workflow automation and AI adoption opportunities to enhance efficiency and drive business growth.",
+  "icons": {
+    "icon": "/favicon.svg"
+  },
+  "openGraph": {
+    "image": "/brtneura-logo.png"
+  },
   "robots": {
-    "index": false
+    "index": true
   },
   "accessibility": {
     "addBypassLinks": false,

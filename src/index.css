@@ -639,8 +639,14 @@ footer { padding: 82px 0 28px; border-top: 1px solid var(--line); background: va
 .footer-cta { padding-left: 35px; border-left: 1px solid var(--line); }
 .footer-cta h3 { margin: 8px 0 20px; font: 600 20px/1.4 "Manrope"; }
 .footer-cta .button { min-height: 42px; }
-.footer-bottom { margin-top: 62px; padding-top: 24px; display: flex; justify-content: space-between; align-items: center; border-top: 1px solid var(--line); color: var(--muted); font-size: 9px; }
-.footer-bottom > div { display: flex; align-items: center; gap: 20px; }
+.footer-bottom { margin-top: 62px; padding-top: 24px; display: flex; flex-direction: column; align-items: center; gap: 16px; border-top: 1px solid var(--line); color: var(--muted); }
+.footer-legal { display: flex; align-items: center; justify-content: center; gap: 22px; }
+.footer-legal a { color: var(--muted); font-size: 11px; transition: color .2s ease; }
+.footer-legal a:hover { color: var(--text); }
+.footer-credit { display: flex; align-items: center; justify-content: center; gap: 5px; font-size: 11px; font-family: "Manrope", sans-serif; letter-spacing: 0.3px; text-align: center; width: 100%; }
+.footer-credit-text { color: var(--muted); font-weight: 500; }
+.footer-credit-brand { font-weight: 700; background: linear-gradient(135deg, #ff3d9a 0%, #d946ef 45%, #8b5cf6 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; display: inline-block; transition: transform .2s ease, filter .2s ease, opacity .2s ease; }
+.footer-credit-brand:hover { filter: drop-shadow(0 2px 8px rgba(217, 70, 239, 0.55)); transform: translateY(-1px); opacity: 0.95; }
 .social { width: 30px; height: 30px; display: grid; place-items: center; border: 1px solid var(--line); border-radius: 50%; }
 
 .detail-page {
@@ -822,7 +828,9 @@ footer { padding: 82px 0 28px; border-top: 1px solid var(--line); background: va
   .faq-item button > span { gap: 12px; font-size: 13px; }
   .faq-answer p { padding-left: 22px; }
   .footer-top { grid-template-columns: 1fr; }
-  .footer-bottom { align-items: flex-start; flex-direction: column; gap: 16px; }
+  .footer-bottom { align-items: center; flex-direction: column; gap: 16px; text-align: center; }
+  .footer-legal { flex-wrap: wrap; justify-content: center; gap: 16px; }
+  .footer-credit { justify-content: center; text-align: center; }
   .audit-modal-backdrop { padding: 12px; }
   .audit-modal { max-height: calc(100vh - 24px); padding: 26px 18px 20px; border-radius: 20px; }
   .audit-modal-close { top: 14px; right: 14px; }
