@@ -44,7 +44,7 @@ function getEnv(key: string, defaultValue = ""): string {
 /**
  * Sends an email notification via the MSG91 v5 email API using the
  * configured template. All eight template variables required by the
- * ai_audit_contact_form template are populated.
+ * configured template are populated.
  *
  * Returns { success: true } on success.
  * Returns { success: false, error: string } on failure.
@@ -55,19 +55,29 @@ export async function sendMsg91Email(
   submittedAt: string,
 ): Promise<{ success: boolean; error?: string }> {
   const authKey = getEnv("MSG91_AUTH_KEY");
-  const templateId = getEnv("MSG91_EMAIL_TEMPLATE_ID", "ai_audit_contact_form");
+  const templateId = getEnv("MSG91_EMAIL_TEMPLATE_ID");
   const senderEmail = getEnv("MSG91_SENDER_EMAIL");
-  const recipientEmail = getEnv("MSG91_RECIPIENT_EMAIL", "snehal.parte@brtneura.in");
-  const ccEmail = getEnv("MSG91_CC_EMAIL", "neha.chavan@brtneura.in");
+  const recipientEmail = getEnv("MSG91_RECIPIENT_EMAIL");
+  const ccEmail = getEnv("MSG91_CC_EMAIL");
 
   if (!authKey) {
     console.error("[MSG91] MSG91_AUTH_KEY is not set. Email notification skipped.");
     return { success: false, error: "MSG91_AUTH_KEY not configured" };
   }
 
+  if (!templateId) {
+    console.error("[MSG91] MSG91_EMAIL_TEMPLATE_ID is not set. Email notification skipped.");
+    return { success: false, error: "MSG91_EMAIL_TEMPLATE_ID not configured" };
+  }
+
   if (!senderEmail) {
     console.error("[MSG91] MSG91_SENDER_EMAIL is not set. Email notification skipped.");
     return { success: false, error: "MSG91_SENDER_EMAIL not configured" };
+  }
+
+  if (!recipientEmail) {
+    console.error("[MSG91] MSG91_RECIPIENT_EMAIL is not set. Email notification skipped.");
+    return { success: false, error: "MSG91_RECIPIENT_EMAIL not configured" };
   }
 
   const senderDomain = senderEmail.split("@")[1] ?? "";
