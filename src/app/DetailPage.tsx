@@ -43,14 +43,21 @@ export default function DetailPage() {
   const key = location.pathname.replace(/^\/|\/$/g, "");
   const content = pages[key];
 
+  const currentTheme = typeof window !== "undefined"
+    ? (localStorage.getItem("brtneura-theme") === "dark" ? "dark" : "white")
+    : "white";
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [key]);
 
   if (!content) {
     return (
-      <main className="detail-page detail-not-found">
-        <img src="/brtneura-logo.png" alt="BRTNeura" />
+      <main className="detail-page detail-not-found" data-theme={currentTheme}>
+        <div className="logo">
+          <img className="logo-img" src="/brtneura-logo.png" alt="BRTNeura" />
+          <span className="logo-tagline">Build. Refine. Thrive.</span>
+        </div>
         <span>404 / PAGE NOT FOUND</span>
         <h1>This direction does not exist yet.</h1>
         <p>The page may have moved. Return to the AI Audit landing page to continue exploring.</p>
@@ -60,9 +67,12 @@ export default function DetailPage() {
   }
 
   return (
-    <div className="detail-page">
+    <div className="detail-page" data-theme={currentTheme}>
       <header className="detail-nav">
-        <Link className="detail-logo" to="/" aria-label="BRTNeura home"><img src="/brtneura-logo.png" alt="BRTNeura" /></Link>
+        <Link className="logo detail-logo" to="/" aria-label="BRTNeura home">
+          <img className="logo-img" src="/brtneura-logo.png" alt="BRTNeura" />
+          <span className="logo-tagline">Build. Refine. Thrive.</span>
+        </Link>
         <Link className="detail-back" to="/"><Arrow back />Back to AI Audit</Link>
         <a className="button button-primary" href="/#booking">Book free AI audit <Arrow /></a>
       </header>

@@ -1,4 +1,4 @@
-import { FormEvent, ReactNode, useEffect, useState } from "react";
+import { FormEvent, ReactNode, useEffect, useRef, useState } from "react";
 
 type IconName =
   | "arrow"
@@ -62,7 +62,8 @@ function Icon({ name, size = 20 }: { name: IconName; size?: number }) {
 function Logo() {
   return (
     <a className="logo" href="#top" aria-label="BRTNeura home">
-      <img src="/brtneura-logo.png" alt="BRTNeura" />
+      <img className="logo-img" src="/brtneura-logo.png" alt="BRTNeura" />
+      <span className="logo-tagline">Build. Refine. Thrive.</span>
     </a>
   );
 }
@@ -233,8 +234,255 @@ function ReportMockup() {
   );
 }
 
+// ---------------------------------------------------------------------------
+// VIDEO TESTIMONIALS — structured config (supports YouTube Shorts, YouTube, or direct MP4)
+// ---------------------------------------------------------------------------
+type Testimonial = {
+  name: string;
+  designation: string;
+  company: string;
+  description: string;
+  src: string;       // YouTube URL, Shorts URL, or direct video in /public
+  poster: string;    // thumbnail image URL or local path in /public
+};
+
+function getYouTubeEmbedInfo(url: string) {
+  if (!url) return null;
+  const shortsMatch = url.match(/youtube\.com\/shorts\/([a-zA-Z0-9_-]+)/);
+  if (shortsMatch) {
+    return {
+      id: shortsMatch[1],
+      embedUrl: `https://www.youtube-nocookie.com/embed/${shortsMatch[1]}`,
+      isShort: true,
+    };
+  }
+  const youtuMatch = url.match(/youtu\.be\/([a-zA-Z0-9_-]+)/);
+  if (youtuMatch) {
+    return {
+      id: youtuMatch[1],
+      embedUrl: `https://www.youtube-nocookie.com/embed/${youtuMatch[1]}`,
+      isShort: false,
+    };
+  }
+  const watchMatch = url.match(/[?&]v=([a-zA-Z0-9_-]+)/);
+  if (watchMatch) {
+    return {
+      id: watchMatch[1],
+      embedUrl: `https://www.youtube-nocookie.com/embed/${watchMatch[1]}`,
+      isShort: false,
+    };
+  }
+  const embedMatch = url.match(/youtube\.com\/embed\/([a-zA-Z0-9_-]+)/);
+  if (embedMatch) {
+    return {
+      id: embedMatch[1],
+      embedUrl: `https://www.youtube-nocookie.com/embed/${embedMatch[1]}`,
+      isShort: false,
+    };
+  }
+  return null;
+}
+
+const testimonials: Testimonial[] = [
+  {
+    name: "Rajan Dange",
+    designation: "CEO",
+    company: "Akshay Enterprises",
+    description: "Hear how Akshay Enterprises leveraged AI and business automation to eliminate operational bottlenecks, streamline execution across teams, and scale performance.",
+    src: "https://youtube.com/shorts/ZHcAib18AXw?feature=share",
+    poster: "https://img.youtube.com/vi/ZHcAib18AXw/hqdefault.jpg",
+  },
+];
+
+function VideoCard({ item }: { item: Testimonial }) {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [playing, setPlaying] = useState(false);
+  const ytInfo = getYouTubeEmbedInfo(item.src);
+  const isYouTube = Boolean(ytInfo);
+  const hasVideo = Boolean(item.src);
+  const posterSrc = item.poster || (ytInfo ? `https://img.youtube.com/vi/${ytInfo.id}/hqdefault.jpg` : "");
+
+  const toggle = () => {
+    if (isYouTube) {
+      setPlaying(!playing);
+      return;
+    }
+    const v = videoRef.current;
+    if (!v) return;
+    if (v.paused) {
+      v.play();
+      setPlaying(true);
+    } else {
+      v.pause();
+      setPlaying(false);
+    }
+  };
+
+  const initials = item.name
+    .split(" ")
+    .map((n) => n[0])
+    .filter(Boolean)
+    .slice(0, 2)
+    .join("");
+
+  return (
+    <article className="testimonial-card">
+      <div className="testimonial-video-wrap">
+        {hasVideo ? (
+          isYouTube ? (
+            playing ? (
+              <>
+                <iframe
+                  className="testimonial-iframe"
+                  src={`${ytInfo!.embedUrl}?autoplay=1&rel=0&modestbranding=1`}
+                  title={`Video testimonial from ${item.name} - ${item.company}`}
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+                <button
+                  type="button"
+                  className="testimonial-close-btn"
+                  onClick={() => setPlaying(false)}
+                  aria-label="Close video player"
+                  title="Close video"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18" />
+                    <line x1="6" y1="6" x2="18" y2="18" />
+                  </svg>
+                </button>
+              </>
+            ) : (
+              <div
+                className="testimonial-preview"
+                onClick={toggle}
+                role="button"
+                tabIndex={0}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") toggle();
+                }}
+                aria-label={`Play testimonial from ${item.name}`}
+              >
+                {posterSrc && (
+                  <img
+                    src={posterSrc}
+                    alt={`${item.name} - ${item.company}`}
+                    className="testimonial-poster-img"
+                    loading="lazy"
+                  />
+                )}
+                <div className="testimonial-poster-overlay" />
+                <span className="testimonial-badge">
+                  <span className="testimonial-badge-dot" />
+                  Client Story
+                </span>
+                <button
+                  className="testimonial-play-btn"
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setPlaying(true);
+                  }}
+                  aria-label={`Play testimonial from ${item.name}`}
+                >
+                  <span className="play-icon">
+                    <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
+                      <path d="M8 5.14v14l11-7-11-7z" />
+                    </svg>
+                  </span>
+                </button>
+              </div>
+            )
+          ) : (
+            <>
+              <video
+                ref={videoRef}
+                className="testimonial-video"
+                src={item.src}
+                poster={posterSrc || undefined}
+                preload="none"
+                playsInline
+                controls={playing}
+                onEnded={() => setPlaying(false)}
+                onPause={() => setPlaying(false)}
+                onPlay={() => setPlaying(true)}
+              />
+              {!playing && (
+                <button
+                  className="testimonial-play-btn"
+                  type="button"
+                  onClick={toggle}
+                  aria-label={`Play testimonial from ${item.name}`}
+                >
+                  <span className="play-icon">
+                    <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
+                      <path d="M8 5.14v14l11-7-11-7z" />
+                    </svg>
+                  </span>
+                </button>
+              )}
+            </>
+          )
+        ) : (
+          <div className="testimonial-placeholder">
+            <div className="placeholder-icon">
+              <svg aria-hidden="true" fill="none" height="40" viewBox="0 0 24 24" width="40">
+                <circle cx="12" cy="12" r="10" stroke="url(#tg)" strokeWidth="1.5" />
+                <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="url(#tg)" />
+                <defs>
+                  <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+                    <stop offset="0%" stopColor="var(--accent)" />
+                    <stop offset="100%" stopColor="var(--accent-light)" />
+                  </linearGradient>
+                </defs>
+              </svg>
+            </div>
+            <span className="placeholder-label">Video coming soon</span>
+          </div>
+        )}
+      </div>
+      <div className="testimonial-body">
+        <p className="testimonial-desc">{item.description}</p>
+        <div className="testimonial-author">
+          <div className="author-avatar">
+            {initials}
+          </div>
+          <div className="author-info">
+            <strong>{item.name}</strong>
+            <span>{item.designation}</span>
+            <span className="author-company">{item.company}</span>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+type ThemeType = "white" | "dark";
+
 function LandingPage() {
-  const [theme, setTheme] = useState<"dark" | "light">("dark");
+  const [theme, setTheme] = useState<ThemeType>(() => {
+    if (typeof window !== "undefined") {
+      try {
+        const saved = localStorage.getItem("brtneura-theme");
+        if (saved === "dark") return "dark";
+        if (saved === "white" || saved === "pure-white") return "white";
+      } catch (e) {}
+    }
+    return "white";
+  });
+
+  const handleThemeChange = (newTheme: ThemeType) => {
+    setTheme(newTheme);
+    try {
+      localStorage.setItem("brtneura-theme", newTheme);
+    } catch (e) {}
+    document.documentElement.setAttribute("data-theme", newTheme);
+  };
+
+  useEffect(() => {
+    document.documentElement.setAttribute("data-theme", theme);
+  }, [theme]);
   const [menuOpen, setMenuOpen] = useState(false);
   const [openFaq, setOpenFaq] = useState(0);
   const [formState, setFormState] = useState<"idle" | "error" | "success">("idle");
@@ -333,6 +581,7 @@ function LandingPage() {
     <div className="app" data-theme={theme} id="top">
       <div className="ambient ambient-one" />
       <div className="ambient ambient-two" />
+      <div className="ambient ambient-three" />
       <header className={`nav-shell ${scrolled ? "scrolled" : ""}`}>
         <nav className="nav">
           <Logo />
@@ -341,13 +590,60 @@ function LandingPage() {
             <a href="#industries" onClick={() => setMenuOpen(false)}>Industries</a>
             <a href="#process" onClick={() => setMenuOpen(false)}>How it works</a>
             <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+            <div className="mobile-nav-theme">
+              <span className="mobile-nav-theme-label">Theme</span>
+              <div className="theme-switcher" role="radiogroup" aria-label="Theme selector (mobile)">
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={theme === "white"}
+                  className={`theme-option ${theme === "white" ? "active" : ""}`}
+                  onClick={() => { handleThemeChange("white"); setMenuOpen(false); }}
+                  title="White Theme"
+                >
+                  <span className="theme-dot dot-white" />
+                  <span className="theme-text">White</span>
+                </button>
+                <button
+                  type="button"
+                  role="radio"
+                  aria-checked={theme === "dark"}
+                  className={`theme-option ${theme === "dark" ? "active" : ""}`}
+                  onClick={() => { handleThemeChange("dark"); setMenuOpen(false); }}
+                  title="Dark Theme"
+                >
+                  <span className="theme-dot dot-dark" />
+                  <span className="theme-text">Dark</span>
+                </button>
+              </div>
+            </div>
             <div className="mobile-nav-cta"><Button href="#booking">Book free AI audit</Button></div>
           </div>
           <div className="nav-actions">
-            <button className="theme-toggle" aria-label={`Switch to ${theme === "dark" ? "light" : "dark"} theme`} onClick={() => setTheme(theme === "dark" ? "light" : "dark")}>
-              <span className={theme === "light" ? "active" : ""}><Icon name="sun" size={15} /></span>
-              <span className={theme === "dark" ? "active" : ""}><Icon name="moon" size={15} /></span>
-            </button>
+            <div className="theme-switcher" role="radiogroup" aria-label="Theme selector">
+              <button
+                type="button"
+                role="radio"
+                aria-checked={theme === "white"}
+                className={`theme-option ${theme === "white" ? "active" : ""}`}
+                onClick={() => handleThemeChange("white")}
+                title="White Theme"
+              >
+                <span className="theme-dot dot-white" />
+                <span className="theme-text">White</span>
+              </button>
+              <button
+                type="button"
+                role="radio"
+                aria-checked={theme === "dark"}
+                className={`theme-option ${theme === "dark" ? "active" : ""}`}
+                onClick={() => handleThemeChange("dark")}
+                title="Dark Theme"
+              >
+                <span className="theme-dot dot-dark" />
+                <span className="theme-text">Dark</span>
+              </button>
+            </div>
             <div className="desktop-cta"><Button href="#booking">Book free AI audit <Icon name="arrow" size={16} /></Button></div>
             <button className="menu-button" aria-expanded={menuOpen} aria-label="Toggle menu" onClick={() => setMenuOpen(!menuOpen)}>
               <Icon name={menuOpen ? "x" : "menu"} size={22} />
@@ -533,6 +829,22 @@ function LandingPage() {
           </div>
         </section>
 
+        <section className="section-pad testimonials-section reveal-section" id="testimonials" data-reveal>
+          <div className="container">
+            <SectionTitle
+              centered
+              eyebrow="REAL BUSINESSES. REAL RESULTS."
+              title="Hear from business owners who've taken the step."
+              text="Hear what business owners have to say about their experience with AI and business automation."
+            />
+            <div className="testimonials-grid">
+              {testimonials.map((item, index) => (
+                <VideoCard key={index} item={item} />
+              ))}
+            </div>
+          </div>
+        </section>
+
         <section className="booking-section reveal-section" id="booking" data-reveal>
           <div className="booking-glow" />
           <div className="container booking-grid">
@@ -665,7 +977,7 @@ function LandingPage() {
 
       <footer id="contact">
         <div className="container footer-top">
-          <div className="footer-brand"><Logo /><p>Build. Refine. Thrive.</p><span>Simplifying AI for every business.</span></div>
+          <div className="footer-brand"><Logo /><span>Simplifying AI for every business.</span></div>
           <div className="footer-links"><span>Explore</span><a href="#about">About AI Audit</a><a href="#industries">Industries</a><a href="#process">How it works</a><a href="#booking">Book a call</a></div>
           <div className="footer-links"><span>Contact</span><a href="mailto:connect@brtneura.com">connect@brtneura.com</a><a href="tel:+918879114702">+91 88791 14702</a><a href="tel:+919403828927">+91 94038 28927</a><a href="https://brtneura.com" target="_blank" rel="noreferrer">brtneura.com</a></div>
           <div className="footer-cta"><span>Ready to move forward?</span><h3>Make your next AI decision the right one.</h3><Button href="#booking">Book free audit <Icon name="arrow" size={16} /></Button></div>

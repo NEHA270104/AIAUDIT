@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>BRTNeura AI Audit | Discover AI Opportunities for Your Business</title>
     
+    <!-- Theme Initializer (Prevents Theme Flash) -->
+    <script>
+      (function() {
+        try {
+          var saved = localStorage.getItem("brtneura-theme");
+          var valid = ["white", "dark", "pure-white"];
+          var theme = (valid.indexOf(saved) !== -1) ? (saved === "pure-white" ? "white" : saved) : "white";
+          document.documentElement.setAttribute("data-theme", theme);
+        } catch (e) {}
+      })();
+    </script>
+
     <!-- Netlify HUD / Badge Neutralizer -->
     <script>
       (function() {
@@ -54,9 +66,14 @@
     <meta name="theme-color" content="#7C3AED" />
 
     <!-- Official BRTNeura Favicon & Touch Icons -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <link rel="icon" type="image/png" sizes="32x32" href="/brtneura-logo.png" />
-    <link rel="apple-touch-icon" href="/brtneura-logo.png" />
+    <!-- ?v=4 forces browsers to discard any cached Instagram / Figma favicon -->
+    <link rel="icon" href="/favicon.ico?v=4" sizes="any" />
+    <link rel="shortcut icon" href="/favicon.ico?v=4" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=4" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=4" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=4" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=4" />
+    <link rel="manifest" href="/site.webmanifest?v=4" />
 
     <!-- Open Graph Metadata -->
     <meta property="og:type" content="website" />
