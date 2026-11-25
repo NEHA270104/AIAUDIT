@@ -241,7 +241,9 @@ type Testimonial = {
   name: string;
   designation: string;
   company: string;
+  quote?: string;
   description: string;
+  outcomes?: string[];
   src: string;       // YouTube URL, Shorts URL, or direct video in /public
   poster: string;    // thumbnail image URL or local path in /public
 };
@@ -288,19 +290,22 @@ const testimonials: Testimonial[] = [
     name: "Rajan Dange",
     designation: "CEO",
     company: "Akshay Enterprises",
-    description: "Hear how Akshay Enterprises leveraged AI and business automation to eliminate operational bottlenecks, streamline execution across teams, and scale performance.",
+    quote: "“BRTNeura gave us complete clarity on where automation actually moves the needle.”",
+    description: "Hear how Akshay Enterprises leveraged AI and business automation to eliminate operational bottlenecks, streamline execution across teams, and scale performance with confidence.",
+    outcomes: ["Eliminated Operational Bottlenecks", "Cross-Team Workflow Sync", "Actionable AI Roadmap"],
     src: "https://youtube.com/shorts/ZHcAib18AXw?feature=share",
-    poster: "https://img.youtube.com/vi/ZHcAib18AXw/hqdefault.jpg",
+    poster: "/rajan-dange-maxres.jpg",
   },
 ];
 
 function VideoCard({ item }: { item: Testimonial }) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [playing, setPlaying] = useState(false);
+  const [videoFormat, setVideoFormat] = useState<"website" | "portrait">("website");
   const ytInfo = getYouTubeEmbedInfo(item.src);
   const isYouTube = Boolean(ytInfo);
   const hasVideo = Boolean(item.src);
-  const posterSrc = item.poster || (ytInfo ? `https://img.youtube.com/vi/${ytInfo.id}/hqdefault.jpg` : "");
+  const posterSrc = item.poster || (ytInfo ? `https://img.youtube.com/vi/${ytInfo.id}/maxresdefault.jpg` : "");
 
   const toggle = () => {
     if (isYouTube) {
@@ -327,131 +332,204 @@ function VideoCard({ item }: { item: Testimonial }) {
 
   return (
     <article className="testimonial-card">
-      <div className="testimonial-video-wrap">
-        {hasVideo ? (
-          isYouTube ? (
-            playing ? (
-              <>
-                <iframe
-                  className="testimonial-iframe"
-                  src={`${ytInfo!.embedUrl}?autoplay=1&rel=0&modestbranding=1`}
-                  title={`Video testimonial from ${item.name} - ${item.company}`}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-                <button
-                  type="button"
-                  className="testimonial-close-btn"
-                  onClick={() => setPlaying(false)}
-                  aria-label="Close video player"
-                  title="Close video"
-                >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
-                    <line x1="18" y1="6" x2="6" y2="18" />
-                    <line x1="6" y1="6" x2="18" y2="18" />
-                  </svg>
-                </button>
-              </>
-            ) : (
-              <div
-                className="testimonial-preview"
-                onClick={toggle}
-                role="button"
-                tabIndex={0}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") toggle();
-                }}
-                aria-label={`Play testimonial from ${item.name}`}
-              >
-                {posterSrc && (
-                  <img
-                    src={posterSrc}
-                    alt={`${item.name} - ${item.company}`}
-                    className="testimonial-poster-img"
-                    loading="lazy"
+      <div className="testimonial-media-col">
+        <div className="testimonial-media-header">
+          <span className="testimonial-badge">
+            <span className="testimonial-badge-dot" />
+            Client Story
+          </span>
+          <div className="video-format-switcher" role="group" aria-label="Select video format">
+            <button
+              type="button"
+              className={`format-toggle-btn ${videoFormat === "website" ? "active" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setVideoFormat("website");
+              }}
+              title="Website Landscape View (16:9)"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <rect x="2" y="5" width="20" height="14" rx="2" />
+              </svg>
+              Website (16:9)
+            </button>
+            <button
+              type="button"
+              className={`format-toggle-btn ${videoFormat === "portrait" ? "active" : ""}`}
+              onClick={(e) => {
+                e.stopPropagation();
+                setVideoFormat("portrait");
+              }}
+              title="Original Portrait Reel (9:16)"
+            >
+              <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2">
+                <rect x="6" y="2" width="12" height="20" rx="2" />
+              </svg>
+              Portrait (9:16)
+            </button>
+          </div>
+        </div>
+
+        <div className={`testimonial-video-wrap ${videoFormat === "portrait" ? "is-portrait" : "is-website"}`}>
+          {hasVideo ? (
+            isYouTube ? (
+              playing ? (
+                <>
+                  <iframe
+                    className="testimonial-iframe"
+                    src={`${ytInfo!.embedUrl}?autoplay=1&rel=0&modestbranding=1`}
+                    title={`Video testimonial from ${item.name} - ${item.company}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                    allowFullScreen
                   />
-                )}
-                <div className="testimonial-poster-overlay" />
-                <span className="testimonial-badge">
-                  <span className="testimonial-badge-dot" />
-                  Client Story
-                </span>
-                <button
-                  className="testimonial-play-btn"
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setPlaying(true);
+                  <button
+                    type="button"
+                    className="testimonial-close-btn"
+                    onClick={() => setPlaying(false)}
+                    aria-label="Close video player"
+                    title="Close video"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="18" y1="6" x2="6" y2="18" />
+                      <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                  </button>
+                </>
+              ) : (
+                <div
+                  className="testimonial-preview"
+                  onClick={toggle}
+                  role="button"
+                  tabIndex={0}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter" || e.key === " ") toggle();
                   }}
                   aria-label={`Play testimonial from ${item.name}`}
                 >
-                  <span className="play-icon">
-                    <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
-                      <path d="M8 5.14v14l11-7-11-7z" />
-                    </svg>
-                  </span>
-                </button>
-              </div>
+                  {posterSrc && (
+                    <img
+                      src={posterSrc}
+                      alt={`${item.name} - ${item.company}`}
+                      className="testimonial-poster-img"
+                      loading="lazy"
+                    />
+                  )}
+                  <div className="testimonial-poster-overlay" />
+                  <button
+                    className="testimonial-play-btn"
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setPlaying(true);
+                    }}
+                    aria-label={`Play testimonial from ${item.name}`}
+                  >
+                    <span className="play-icon">
+                      <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
+                        <path d="M8 5.14v14l11-7-11-7z" />
+                      </svg>
+                    </span>
+                  </button>
+                </div>
+              )
+            ) : (
+              <>
+                <video
+                  ref={videoRef}
+                  className="testimonial-video"
+                  src={item.src}
+                  poster={posterSrc || undefined}
+                  preload="none"
+                  playsInline
+                  controls={playing}
+                  onEnded={() => setPlaying(false)}
+                  onPause={() => setPlaying(false)}
+                  onPlay={() => setPlaying(true)}
+                />
+                {!playing && (
+                  <button
+                    className="testimonial-play-btn"
+                    type="button"
+                    onClick={toggle}
+                    aria-label={`Play testimonial from ${item.name}`}
+                  >
+                    <span className="play-icon">
+                      <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
+                        <path d="M8 5.14v14l11-7-11-7z" />
+                      </svg>
+                    </span>
+                  </button>
+                )}
+              </>
             )
           ) : (
-            <>
-              <video
-                ref={videoRef}
-                className="testimonial-video"
-                src={item.src}
-                poster={posterSrc || undefined}
-                preload="none"
-                playsInline
-                controls={playing}
-                onEnded={() => setPlaying(false)}
-                onPause={() => setPlaying(false)}
-                onPlay={() => setPlaying(true)}
-              />
-              {!playing && (
-                <button
-                  className="testimonial-play-btn"
-                  type="button"
-                  onClick={toggle}
-                  aria-label={`Play testimonial from ${item.name}`}
-                >
-                  <span className="play-icon">
-                    <svg aria-hidden="true" fill="currentColor" height="22" viewBox="0 0 24 24" width="22">
-                      <path d="M8 5.14v14l11-7-11-7z" />
-                    </svg>
-                  </span>
-                </button>
-              )}
-            </>
-          )
-        ) : (
-          <div className="testimonial-placeholder">
-            <div className="placeholder-icon">
-              <svg aria-hidden="true" fill="none" height="40" viewBox="0 0 24 24" width="40">
-                <circle cx="12" cy="12" r="10" stroke="url(#tg)" strokeWidth="1.5" />
-                <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="url(#tg)" />
-                <defs>
-                  <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
-                    <stop offset="0%" stopColor="var(--accent)" />
-                    <stop offset="100%" stopColor="var(--accent-light)" />
-                  </linearGradient>
-                </defs>
-              </svg>
+            <div className="testimonial-placeholder">
+              <div className="placeholder-icon">
+                <svg aria-hidden="true" fill="none" height="40" viewBox="0 0 24 24" width="40">
+                  <circle cx="12" cy="12" r="10" stroke="url(#tg)" strokeWidth="1.5" />
+                  <path d="M10 8.5l6 3.5-6 3.5V8.5z" fill="url(#tg)" />
+                  <defs>
+                    <linearGradient id="tg" x1="0" y1="0" x2="1" y2="1">
+                      <stop offset="0%" stopColor="var(--accent)" />
+                      <stop offset="100%" stopColor="var(--accent-light)" />
+                    </linearGradient>
+                  </defs>
+                </svg>
+              </div>
+              <span className="placeholder-label">Video coming soon</span>
             </div>
-            <span className="placeholder-label">Video coming soon</span>
+          )}
+        </div>
+
+        <div className="testimonial-media-footer">
+          <div className="media-footer-info">
+            <span className="media-footer-title">Akshay Enterprises AI Review</span>
+            <span className="media-footer-sub">Executive Video • 0:45 min</span>
+          </div>
+          <a
+            href={item.src}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="media-footer-link"
+            title="Watch on YouTube Shorts (opens in new tab)"
+          >
+            <span>YouTube</span>
+            <Icon name="arrow" size={12} />
+          </a>
+        </div>
+      </div>
+
+      <div className="testimonial-body">
+        <div className="testimonial-rating-row">
+          <div className="testimonial-stars" aria-label="5 out of 5 stars">
+            ★★★★★
+          </div>
+          <span className="testimonial-verified-badge">
+            <Icon name="check" size={12} /> Verified Client Story
+          </span>
+        </div>
+        {item.quote && <blockquote className="testimonial-quote">{item.quote}</blockquote>}
+        <p className="testimonial-desc">{item.description}</p>
+        {item.outcomes && (
+          <div className="testimonial-outcomes">
+            {item.outcomes.map((outcome) => (
+              <span key={outcome} className="outcome-pill">
+                <Icon name="check" size={11} /> {outcome}
+              </span>
+            ))}
           </div>
         )}
-      </div>
-      <div className="testimonial-body">
-        <p className="testimonial-desc">{item.description}</p>
         <div className="testimonial-author">
           <div className="author-avatar">
             {initials}
           </div>
           <div className="author-info">
             <strong>{item.name}</strong>
-            <span>{item.designation}</span>
-            <span className="author-company">{item.company}</span>
+            <span>{item.designation}, <strong>{item.company}</strong></span>
           </div>
+          <a href="#booking" className="testimonial-cta-pill">
+            Book Discovery Call <Icon name="arrow" size={13} />
+          </a>
         </div>
       </div>
     </article>
@@ -586,10 +664,11 @@ function LandingPage() {
         <nav className="nav">
           <Logo />
           <div className={`nav-links ${menuOpen ? "open" : ""}`}>
+            <a href="#testimonials" onClick={() => setMenuOpen(false)}>What Clients Say</a>
             <a href="#about" onClick={() => setMenuOpen(false)}>About AI Audit</a>
-            <a href="#industries" onClick={() => setMenuOpen(false)}>Industries</a>
             <a href="#process" onClick={() => setMenuOpen(false)}>How it works</a>
-            <a href="#contact" onClick={() => setMenuOpen(false)}>Contact</a>
+            <a href="#industries" onClick={() => setMenuOpen(false)}>Industries</a>
+            <a href="#booking" onClick={() => setMenuOpen(false)}>Contact</a>
             <div className="mobile-nav-theme">
               <span className="mobile-nav-theme-label">Theme</span>
               <div className="theme-switcher" role="radiogroup" aria-label="Theme selector (mobile)">
@@ -679,6 +758,22 @@ function LandingPage() {
             <a href="#industries">Manufacturing</a><i />
             <a href="#industries">Retail & services</a>
           </div>
+          </div>
+        </section>
+
+        <section className="section-pad testimonials-section reveal-section" id="testimonials" data-reveal>
+          <div className="container">
+            <SectionTitle
+              centered
+              eyebrow="CLIENT SPOTLIGHT & PROVEN IMPACT"
+              title="What our clients say about working with BRTNeura."
+              text="Hear directly from business owners on how an AI Audit streamlined operations, eliminated bottlenecks, and gave them a confident execution roadmap."
+            />
+            <div className="testimonials-grid">
+              {testimonials.map((item, index) => (
+                <VideoCard key={index} item={item} />
+              ))}
+            </div>
           </div>
         </section>
 
@@ -829,23 +924,8 @@ function LandingPage() {
           </div>
         </section>
 
-        <section className="section-pad testimonials-section reveal-section" id="testimonials" data-reveal>
-          <div className="container">
-            <SectionTitle
-              centered
-              eyebrow="REAL BUSINESSES. REAL RESULTS."
-              title="Hear from business owners who've taken the step."
-              text="Hear what business owners have to say about their experience with AI and business automation."
-            />
-            <div className="testimonials-grid">
-              {testimonials.map((item, index) => (
-                <VideoCard key={index} item={item} />
-              ))}
-            </div>
-          </div>
-        </section>
-
         <section className="booking-section reveal-section" id="booking" data-reveal>
+          <div id="contact" style={{ position: "absolute", top: "-100px" }} />
           <div className="booking-glow" />
           <div className="container booking-grid">
             <div className="booking-copy">
@@ -978,7 +1058,7 @@ function LandingPage() {
       <footer id="contact">
         <div className="container footer-top">
           <div className="footer-brand"><Logo /><span>Simplifying AI for every business.</span></div>
-          <div className="footer-links"><span>Explore</span><a href="#about">About AI Audit</a><a href="#industries">Industries</a><a href="#process">How it works</a><a href="#booking">Book a call</a></div>
+          <div className="footer-links"><span>Explore</span><a href="#about">About AI Audit</a><a href="#testimonials">What clients say</a><a href="#process">How it works</a><a href="#industries">Industries</a><a href="#booking">Book a call</a></div>
           <div className="footer-links"><span>Contact</span><a href="mailto:connect@brtneura.com">connect@brtneura.com</a><a href="tel:+918879114702">+91 88791 14702</a><a href="tel:+919403828927">+91 94038 28927</a><a href="https://brtneura.com" target="_blank" rel="noreferrer">brtneura.com</a></div>
           <div className="footer-cta"><span>Ready to move forward?</span><h3>Make your next AI decision the right one.</h3><Button href="#booking">Book free audit <Icon name="arrow" size={16} /></Button></div>
         </div>
